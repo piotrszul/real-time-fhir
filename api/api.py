@@ -26,10 +26,14 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 
+
+FHIR_DIR = os.environ.get("FHIR_DIR", "./input")
+print("FHIR_DIR:", FHIR_DIR)
+
 # Init api classes
 reader = Reader()
 requester = Requester()
-gen = Generator()
+gen = Generator(FHIR_DIR)
 event_helper = EventHelper()
 
 

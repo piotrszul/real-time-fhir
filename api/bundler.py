@@ -11,6 +11,10 @@ class Bundler:
     A class for bundling resources and references to form FHIR bundle entries
     """
 
+    def __init__(self, fhir_dir="./input"):
+        self.fhir_dir = fhir_dir
+
+
     def build_single_bundle(self, json_line):
         """
         Build a single bundle by compiling a resource and its references into a single bundle
@@ -105,7 +109,7 @@ class Bundler:
         :return: List storing references in json strings
         """
         # Read all resource ids and get references' line numbers
-        path = f"./input/{key}.ndjson"
+        path = os.path.join(self.fhir_dir, f"{key}.ndjson")
         with open(path, "r", encoding="latin-1") as infile:
             resource_ids = {json.loads(line)["id"]: i for i, line in enumerate(infile)}
             reference_idxs = {
@@ -136,7 +140,7 @@ class Bundler:
         elif key == "Practitioner" or key == "PractitionerRole":
             prefix = "practitionerInformation"
 
-        dir_path = "./input/"
+        dir_path = self.fhir_dir
         files_with_prefix = [
             filename for filename in os.listdir(dir_path) if filename.startswith(prefix)
         ]

@@ -2,6 +2,7 @@
 #  Organisation (CSIRO) ABN 41 687 119 230. Licensed under the CSIRO Open Source
 #  Software Licence Agreement.
 
+import os
 from datetime import datetime
 from api.generatorhelper import GeneratorHelper
 from api.bundler import Bundler
@@ -12,9 +13,10 @@ class Generator:
     A class to perform processing of event generation
     """
 
-    def __init__(self):
+    def __init__(self, fhir_dir="./input"):
         self.duration = 0
         self.resource_type = None
+        self.fhir_dir = fhir_dir
 
     def set_rtype_and_duration(self, resource_type, duration):
         """
@@ -39,8 +41,8 @@ class Generator:
 
         :return: Dict of normalized and sorted events
         """
-        bundler = Bundler()
-        src_path = f"./input/{self.resource_type}.ndjson"
+        bundler = Bundler(self.fhir_dir)
+        src_path = os.path.join(self.fhir_dir, f"{self.resource_type}.ndjson")
 
         # Read resources and create event timestamps for each event
         timestamps = GeneratorHelper.load_json_timestamps(src_path, self.resource_type)
